@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0  # Or any version you prefer
+    container_name: mysql_local
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql  # To persist MySQL data locally
+      - ./mysql-init:/docker-entrypoint-initdb.d/  # To initialize DB with scripts
+    networks:
+      - mysql_network
+
+networks:
+  mysql_network:
+    driver: bridge
