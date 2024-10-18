@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 interface UserAttributes {
   id: number;
@@ -8,17 +8,19 @@ interface UserAttributes {
   password: string;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+class User extends Model<UserAttributes, Optional<UserAttributes, "id">>
+  implements UserAttributes {
+  public id!: number;
+  public email!: string;
+  public password!: string;
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public id!: number;       // Declare public attributes
-  public email!: string;    // Declare public attributes
-  public password!: string;  // Declare public attributes
-
-  // Method to hash the password
   public static async hashPassword(password: string): Promise<string> {
-    const saltRounds = 10; // Use a reasonable salt round (10 is common)
+    const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);
+  }
+
+  public async checkPassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
   }
 }
 
@@ -44,9 +46,12 @@ User.init(
     modelName: "User",
     hooks: {
       beforeCreate: async (user: User) => {
-        console.log("Before creating user:", user);
-        // Ensure we are hashing the original password value from user
-        user.password = await User.hashPassword(user.dataValues.password); // Use user.password directly
+        user.password = await User.hashPassword(user.password);
+      },
+      beforeUpdate: async (user: User) => {
+        if (user.changed("password")) {
+          user.password = await User.hashPassword(user.password);
+        }
       },
     },
   }

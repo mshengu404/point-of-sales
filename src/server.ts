@@ -1,12 +1,11 @@
-import Fastify, { FastifyInstance } from 'fastify';
-import { AuthRoute } from './routes/auth.routes';
-import { ProductRoute } from './routes/product.routes';
-import { TransactionRoute } from './routes/transaction.routes';
-import { UpsellRoute } from './routes/upsell.routes';
-import fastifyPassport from '@fastify/passport';
-import { authenticateJWT } from './middleware/auth.middleware';
-import { config } from 'dotenv';
-import sequelize from './config/database';
+import Fastify, { FastifyInstance } from "fastify";
+import { AuthRoute } from "./routes/auth.routes";
+import { ProductRoute } from "./routes/product.routes";
+import { TransactionRoute } from "./routes/transaction.routes";
+import { UpsellRoute } from "./routes/upsell.routes";
+import { authenticateJWT } from "./middleware/auth.middleware";
+import { config } from "dotenv";
+import sequelize from "./config/database";
 
 config();
 
@@ -34,9 +33,9 @@ export class Server {
   }
 
   private registerMiddleware(): void {
-    this.app.addHook('preHandler', async (request, reply) => {
-      const publicRoutes = ['/login', '/signup'];
-      if (publicRoutes.some(route => request.url.startsWith(route))) {
+    this.app.addHook("preHandler", async (request, reply) => {
+      const publicRoutes = ["/login", "/signup"];
+      if (publicRoutes.some((route) => request.url.startsWith(route))) {
         return;
       }
       await authenticateJWT(request, reply);
@@ -56,9 +55,9 @@ export class Server {
   private async testConnection(): Promise<void> {
     try {
       await sequelize.authenticate();
-      console.log('Connection has been established successfully.');
+      console.log("Connection has been established successfully.");
     } catch (error) {
-      console.error('Unable to connect to the database:', error);
+      console.error("Unable to connect to the database:", error);
       process.exit(1);
     }
   }

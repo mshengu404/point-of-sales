@@ -5,19 +5,23 @@ interface ProductAttributes {
   id: number;
   name: string;
   price: number;
-  description: string;
-  quantity: number;
+  description?: string;
+  quantity?: number;
+  upsells?: Product[];
 }
 
-interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
-
-class Product extends Model<ProductAttributes, ProductCreationAttributes>
+class Product
+  extends Model<ProductAttributes, Optional<ProductAttributes, "id">>
   implements ProductAttributes {
   public id!: number;
   public name!: string;
   public price!: number;
-  public description!: string;
-  public quantity!: number;
+  public description?: string;
+  public quantity?: number;
+  public upsells?: Product[];
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Product.init(
@@ -37,14 +41,18 @@ Product.init(
     },
     description: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     quantity: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
     },
   },
   {
     sequelize,
     modelName: "Product",
+    timestamps: true,
   }
 );
 

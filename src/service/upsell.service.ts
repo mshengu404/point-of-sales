@@ -4,23 +4,32 @@ import Upsell from "../model/upsell";
 export class UpsellService {
   constructor() {}
 
-  async linkUpsell(productId: number, upsellProductId: number) {
-    return await Upsell.create({ productId, upsellProductId });
-  }
+  linkUpsell = async (
+    productId: number,
+    upsellProductId: number
+  ): Promise<Upsell> => {
+    const upsell = await Upsell.create({ productId, upsellProductId });
+    return upsell;
+  };
 
-  async getUpsells(productId: number) {
+  getUpsells = async (productId: number): Promise<Product[]> => {
     const product = await Product.findByPk(productId, {
       include: [{ model: Product, as: "upsells" }],
     });
-    return product ? product : [];
-  }
+    console.log("product", product);
+    return product?.dataValues.upsells || [];
+  };
 
-  async removeUpsell(productId: number, upsellProductId: number) {
-    return await Upsell.destroy({
+  removeUpsell = async (
+    productId: number,
+    upsellProductId: number
+  ): Promise<boolean> => {
+    const deletedCount = await Upsell.destroy({
       where: {
         productId,
         upsellProductId,
       },
     });
-  }
+    return deletedCount > 0;
+  };
 }

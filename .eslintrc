@@ -1,0 +1,42 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": ["plugin:@typescript-eslint/recommended"],
+  "parserOptions": { "ecmaVersion": 2020, "sourceType": "module" },
+  "rules": {
+      "@typescript-eslint/no-explicit-any":"off",
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+      "complexity": ["error", 10],
+      "max-depth": ["error", 4],
+      "max-params": ["error", 5],
+      "max-nested-callbacks": ["error", 3],
+
+      // Stylistic Rules
+      "indent": ["error", 2],
+      "quotes": ["error", "single", { "avoidEscape": true }],
+      "semi": ["error", "always"],
+      "comma-dangle": ["error", "always-multiline"],
+      "no-trailing-spaces": "error",
+      "object-curly-spacing": ["error", "always"],
+
+      // Best Practices
+      "no-console": "warn",
+      "no-eval": "error",
+      "no-implicit-coercion": ["error", { "allow": ["!!"] }],
+      "eqeqeq": ["error", "always"],
+      "no-param-reassign": ["error", { "props": true }],
+      "curly": ["error", "all"],
+      "no-shadow": ["error", { "hoist": "all" }],
+
+      // Node.js Specific Rules
+      "no-path-concat": "error", // path.join()
+      "no-process-exit": "error",
+
+      // ES6 Rules
+      "arrow-spacing": ["error", { "before": true, "after": true }],
+      "object-shorthand": ["error", "always"],
+      "prefer-arrow-callback": "error",
+
+      // Modules and Imports
+      "no-duplicate-imports": "error"
+  }
+}
