@@ -29,7 +29,12 @@ describe("ProductService", () => {
             "message": "Quote contract terms found"
         };
         jest.spyOn(productService, 'createProduct').mockResolvedValue(product);
-        const result = await productService.createProduct();
+        const result = await productService.createProduct({
+          "name": "Sample Product",
+          "price": 19.99,
+          "description": "This is a sample product description.",
+          "quantity": 100
+        });
         expect(result).toEqual(product);
     });
 });
